@@ -14,6 +14,8 @@
     "@react-navigation/drawer": "^7.3.2",
     "@react-navigation/native": "^7.0.19",
     "@react-navigation/stack": "^7.2.3",
+    "@tanstack/react-query": "^5.71.1",
+    "axios": "^1.8.4",
     "react": "19.0.0",
     "react-native": "^0.78.1",
     "react-native-encrypted-storage": "^4.0.3",
