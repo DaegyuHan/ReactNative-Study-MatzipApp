@@ -1,4 +1,4 @@
-import {ForwardedRef} from "react";
+import {ForwardedRef} from 'react';
 
 function mergeRefs<T> (...refs:ForwardedRef<T>[]) {
     return (node: T) => {
