@@ -1,18 +1,24 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   getAccessToken,
-  getProfile, logout,
+  getProfile,
+  logout,
   postLogin,
   postSignup,
-} from '../../api/auth.ts';
+} from '@/api/auth.ts';
 import {
   UseMutationCustomOptions,
   UseQueryCustomOptions,
-} from '../../types/common.ts';
-import {removeEncryptStorage, removeHeader, setEncryptStorage, setHeader} from '../../utils';
+} from '@/types/common.ts';
+import {
+  removeEncryptStorage,
+  removeHeader,
+  setEncryptStorage,
+  setHeader,
+} from '@/utils';
 import {useEffect} from 'react';
-import queryClient from '../../api/queryClient.ts';
-import {numbers, queryKeys, storageKeys} from '../../constants';
+import queryClient from '@/api/queryClient.ts';
+import {numbers, queryKeys, storageKeys} from '@/constants';
 
 function useSignup(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
@@ -29,8 +35,12 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
       setHeader('Authorization', `Bearer ${accessToken}`);
     },
     onSettled: () => {
-      queryClient.refetchQueries({queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN]});
-      queryClient.invalidateQueries({queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE]});
+      queryClient.refetchQueries({
+        queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
+      });
     },
     ...mutationOptions,
   });
@@ -73,28 +83,34 @@ function useGetProfile(queryOptions?: UseQueryCustomOptions) {
 function useLogout(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
     mutationFn: logout,
-    onSuccess: ()=> {
+    onSuccess: () => {
       removeHeader('Authorization');
       removeEncryptStorage(storageKeys.REFRESH_TOKEN);
     },
-    onSettled: ()=> {
+    onSettled: () => {
       queryClient.invalidateQueries({queryKey: [queryKeys.AUTH]});
     },
     ...mutationOptions,
   });
 }
 
-function useAuth(){
+function useAuth() {
   const signupMutation = useSignup();
   const refreshTokenQuery = useGetRefreshToken();
   const getProfileQuery = useGetProfile({
-    enabled: refreshTokenQuery.isSuccess
-  })
+    enabled: refreshTokenQuery.isSuccess,
+  });
   const isLogin = getProfileQuery.isSuccess;
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
 
-  return {signupMutation, loginMutation, isLogin, getProfileQuery, logoutMutation};
+  return {
+    signupMutation,
+    loginMutation,
+    isLogin,
+    getProfileQuery,
+    logoutMutation,
+  };
 }
 
-export default useAuth
+export default useAuth;
